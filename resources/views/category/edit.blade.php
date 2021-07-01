@@ -6,9 +6,10 @@
 </head>
 <body>
 
-    <form action="{{ route('category.store') }}" method="POST">
+    <form action="{{ route('category.update', $category->id) }}" method="POST">
         @csrf
-        <input type="text" required name="name">
+       {{ method_field('PUT') }}
+        <input type="text" required name="name" value="{{ $category->name }}">
         <select name="parent_id">
             @foreach($categories as $category)
                 <option value="{{ $category->id }}">{{ $category->name }}</option>

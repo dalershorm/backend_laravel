@@ -15,6 +15,9 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::get();
+        // return response()->json([
+        //     'categories' => $categories
+        // ]);
         return view('category.index', compact('categories'));
     }
 
@@ -25,7 +28,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('parent_id', 0)->get();
+        $categories = Category::get();
 
         return view('category.create', compact('categories'));
     }
@@ -40,9 +43,13 @@ class CategoryController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'parent_id' => 'required',
+            // 'parent_id' => 'required',
         ]);
-        Category::create($request->all());
+        $category = Category::create($request->all());
+        // return response()->json([
+        //     'category' => $category
+        // ]);
+        return redirect()->route('category.index');
     }
 
     /**
@@ -64,7 +71,9 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $categories = Category::get();
+        $category = Category::find($id);
+        return view('category.edit', compact('categories', 'category'));
     }
 
     /**
@@ -76,7 +85,12 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            // 'parent_id' => 'required',
+        ]);
+        Category::find($id)->update($request->all());
+        return redirect()->route('category.index');
     }
 
     /**
@@ -87,6 +101,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Category::where('id', $id)->delete();
+        return redirect()->route('category.index');
     }
 }
