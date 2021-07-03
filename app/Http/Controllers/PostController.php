@@ -71,7 +71,25 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $this->validate($request, [
+            'title'=> 'required',
+            'desc'=> 'required',
+            'user_id'=> 'required',
+            'category_id'=> 'required',
+            'is_active'=> 'required',
+        ]);
+
+        $post->update([
+            'title'=> $request->title,
+            'desc'=> $request->desc,
+            'user_id'=> $request->user_id,
+            'category_id'=> $request->category_id,
+            'is_active'=> $request->is_active,
+        ]);
+
+        return response()->json([
+            'post' => $post->load('user', 'category')
+        ]);
     }
 
     /**
@@ -82,6 +100,6 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
     }
 }
